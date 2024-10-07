@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.java_intern.cruddemo.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.java_intern.cruddemo.entity.User">
+        <id property="id" column="id" />
+        <result property="email" column="email" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="createdAt" column="created_at" javaType="java.sql.Timestamp" />
+        <result property="updatedAt" column="updated_at" javaType="java.sql.Timestamp" />
+    </resultMap>
+
+    <select id="getUserById" resultType="com.java_intern.cruddemo.entity.User" parameterType="Long">
+        SELECT * FROM tn_user WHERE id = #{id};
+    </select>
+
+    <select id="getAllUsers">
+        SELECT * FROM tn_user
+        LIMIT #{getPaging.pageSize} OFFSET #{getPaging.offset};
+    </select>
+
+    <select id="countUsers" resultType="long">
+        SELECT COUNT(*) FROM tn_user;
+    </select>
+
+    <select id="addUser" parameterType="com.java_intern.cruddemo.dto.request.UserRequest"
+            resultType="com.java_intern.cruddemo.entity.User">
+        INSERT INTO tn_user (id, email, username, password, created_at, updated_at)
+        VALUES (#{id}, #{email}, #{username}, #{password}, #{createdAt}, #{updatedAt});
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="updateUser" resultType="com.java_intern.cruddemo.entity.User">
+        UPDATE public.tn_user
+        SET email=#{email}, username= #{username}, "password"= #{password} , created_at=now(), updated_at=now()
+        WHERE id= #{id};
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="deleteUser" parameterType="Long">
+        DELETE FROM tn_user WHERE id = #{id}
+    </select>
+
+    <select id="selectEmployees" parameterType="map" resultType="com.java_intern.cruddemo.dto.request.UserRequest">
+        SELECT *
+        FROM employees
+        ORDER BY employee_id
+        LIMIT #{pageSize} OFFSET #{offset};
+    </select>
+
+</mapper>
